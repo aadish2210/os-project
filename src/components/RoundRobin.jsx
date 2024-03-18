@@ -28,6 +28,7 @@ const RoundRobin = () => {
     setProcesses([...processes, { id , arrivalTime : aT, burstTime:bT }]);
     console.log("Added Process");
   };
+
   
   const handleSimulate = async () => {
     roundRobin(processes,timeQuantam);
@@ -66,6 +67,7 @@ const RoundRobin = () => {
     for (let i = 0; i < processes.length; i++) {
         const process = processes[i];
         burstTime.push({ id: process.id, time: process.burstTime });
+
     }
     
     const queue = [...processes]; 

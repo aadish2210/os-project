@@ -8,6 +8,8 @@ import {
   createBrowserRouter,
   RouterProvider,
 } from "react-router-dom";
+import Bankers from './components/Bankers.jsx'
+import ScanDisk from './components/ScanDisk.jsx'
 
 const router = createBrowserRouter([
   {
@@ -17,6 +19,13 @@ const router = createBrowserRouter([
   {
     path: "/round-robin",
     element : <RoundRobin />,
+  },
+  {
+    path : "/bankers",
+    element : <Bankers/>
+  },{
+    path : "/scan-disk",
+    element : <ScanDisk/>
   }
 ]);
 
