@@ -10,7 +10,6 @@ import {
 } from "react-router-dom";
 import Bankers from './components/Bankers.jsx'
 import ScanDisk from './components/ScanDisk.jsx'
-
 const router = createBrowserRouter([
   {
     path: "/",
@@ -22,7 +21,7 @@ const router = createBrowserRouter([
   },
   {
     path : "/bankers",
-    element : <Bankers/>
+    element : <Bankers />
   },{
     path : "/scan-disk",
     element : <ScanDisk/>
