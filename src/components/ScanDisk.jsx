@@ -1,5 +1,6 @@
 import React from 'react'
 import {Input , Button,Code , Autocomplete ,AutocompleteItem} from "@nextui-org/react";
+
 const ScanDisk = () => {
     const [diskSize , setDiskSize] = React.useState(200);
     const [seekSequence , setSeekSequence] = React.useState([]);
@@ -19,6 +20,7 @@ const ScanDisk = () => {
     ]
     const handleClick = () => {
         setSeekSequence([...seekSequence,seekValue])
+        
     }
     const handleRemove = () => {
         setSeekSequence(seekSequence.slice(0,-1))
@@ -32,7 +34,7 @@ const ScanDisk = () => {
     }
 
     function scan(requestarray, head, direction, disk_size) {
-        let seek_count = 0; // summation of distances
+        let seek_count = Number(0); // summation of distances
         let dist = 0;
         let count = 0;
         let seek_sequence = [];
@@ -81,12 +83,12 @@ const ScanDisk = () => {
             }
             // have to go till the end
             dist = requestarray[0];
-            seek_count += dist;
+            seek_count += Number(dist);
             seek_sequence.push(0);
     
             // jump to the other end 
             dist = requestarray[count];
-            seek_count += dist;
+            seek_count += Number(dist);
             seek_sequence.push(requestarray[count])
             head = requestarray[count]
     
@@ -102,7 +104,8 @@ const ScanDisk = () => {
         else {
             console.log("Please enter either 'left' or 'right'");
         }
-        
+        //console.log("Pearls Algo")
+        //console.log(seek_count);
         setSeekCount(seek_count);
         console.log(seek_sequence);
         console.log(seek_count);
@@ -120,6 +123,7 @@ const ScanDisk = () => {
         head=Number(headposition);
         requestarray=seekSequence;
         direction=seekDirection;
+        //console.log(direction);
         scan(requestarray, head, direction, disk_size)
     }
   return (
@@ -165,6 +169,9 @@ const ScanDisk = () => {
             {seekSequence.length===0 ? <Code color='danger'>EMPTY</Code> : seekSequence.map((item,index) => (<Code key={index} color="primary">{item}</Code>))}
         </div>
         {seekCount!=-1 ? <Code color="primary" className='text-xl text-white font-semibold m-10'>Seek Count : {seekCount}</Code>:null}
+        <div>
+            <h1 className='text-white mt-5 text-xl font-semibold'>Chart</h1>
+        </div>
     </div>
     
     
