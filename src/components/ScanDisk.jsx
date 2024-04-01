@@ -1,7 +1,41 @@
 import React from 'react'
 import {Input , Button,Code , Autocomplete ,AutocompleteItem} from "@nextui-org/react";
-
+import { Line } from 'react-chartjs-2';
+import { CategoryScale, Chart, LineElement, LinearScale, PointElement, Colors } from 'chart.js';
+Chart.defaults.color = '#FFFFFF';
+Chart.defaults.backgroundColor = '#9BD0F5';
+Chart.defaults.borderColor = '#005BC4';
+Chart.register(CategoryScale,
+    LinearScale,
+    PointElement,
+    LineElement,
+    Colors,
+    );
 const ScanDisk = () => {
+        const [graph,setGraph] = React.useState([1]);
+        const [graphSize , setGraphSize] = React.useState([]);
+        
+        const data = {
+            labels: [0,1,2,3,4,5,6,7,8,9],
+            datasets : [
+                {
+                    label : "demo",
+                    data : graph,
+                    fill : false,
+                },
+            ]
+        }
+    
+
+    const options = {
+        scales : {
+            y : {
+                type : "linear",
+                beginAtZero : true,
+            }
+        },
+       
+    }
     const [diskSize , setDiskSize] = React.useState(200);
     const [seekSequence , setSeekSequence] = React.useState([]);
     const [seekValue , setSeekValue] = React.useState(0)
@@ -19,7 +53,7 @@ const ScanDisk = () => {
         }
     ]
     const handleClick = () => {
-        setSeekSequence([...seekSequence,seekValue])
+        setSeekSequence([...seekSequence,Number(seekValue)])
         
     }
     const handleRemove = () => {
@@ -31,46 +65,62 @@ const ScanDisk = () => {
         setDiskSize(200);
         setHeadPosition(50);
         setSeekCount(-1);
+        setGraph([]);
     }
 
-    function scan(requestarray, head, direction, disk_size) {
+    async function scan(requestarray, head, direction, disk_size) {
         let seek_count = Number(0); // summation of distances
         let dist = 0;
         let count = 0;
-        let seek_sequence = [];
+        let seek_sequence = [head];
+        let i;
     
         requestarray.sort((a, b) => a - b); // otherwise sorts as strings
-        for(let i = 0; i < requestarray.length; i++) {
+        for(i = 0; i < requestarray.length; i++) {
             if (requestarray[i] > head) {
                 count = i;
                 break;
             }
         }
+        if(i==requestarray.length){
+            count=i;
+        }
     
         // count is on start of right array
         if (direction == "right") {
+            
             for (let i = 0; i < requestarray.length - count; i++) {
+                
                 dist = requestarray[count + i] - head;
                 seek_count += dist;
                 seek_sequence.push(requestarray[count + i]);
                 head = requestarray[count + i];
             }
             // have to go till the end
+           
             dist = disk_size - requestarray[requestarray.length - 1] - 1;
             seek_count += dist;
             seek_sequence.push(disk_size - 1);
-    
+            
+            
             // jump to the other side of head(the original head)
+            
+            if(count!=0){
             dist = disk_size - requestarray[count - 1] - 1;
             seek_count += dist;
             seek_sequence.push(requestarray[count - 1]);
+            
             head = requestarray[count - 1];
     
             for (let i = 0; i < count - 1; i++) {
+                
                 dist = head - requestarray[count - i - 2];
                 seek_count += dist;
                 seek_sequence.push(requestarray[count - i - 2]);
+                
                 head = requestarray[count - i - 2];
+                
+            }
             }
             // end
         }
@@ -86,6 +136,7 @@ const ScanDisk = () => {
             seek_count += Number(dist);
             seek_sequence.push(0);
     
+            if(count != requestarray.length){
             // jump to the other end 
             dist = requestarray[count];
             seek_count += Number(dist);
@@ -98,17 +149,20 @@ const ScanDisk = () => {
                 seek_sequence.push(requestarray[i]);
                 head = requestarray[i];
             }
+            }
             // end
     
         }
         else {
             console.log("Please enter either 'left' or 'right'");
         }
-        //console.log("Pearls Algo")
-        //console.log(seek_count);
+ 
+        setGraph(seek_sequence);
+        console.log("compplted")
+        console.log(data.datasets[0].data)
         setSeekCount(seek_count);
-        console.log(seek_sequence);
-        console.log(seek_count);
+        //console.log(seek_sequence);
+        //console.log(seek_count);
     }
     
     let requestarray = [98, 183, 41, 122, 14, 124, 65, 67];
@@ -119,13 +173,14 @@ const ScanDisk = () => {
     let disk_size = 200;
 
     const handleGenerate = () => {
-        disk_size=Number(diskSize);
-        head=Number(headposition);
-        requestarray=seekSequence;
-        direction=seekDirection;
+        // disk_size=Number(diskSize);
+        // head=Number(headposition);
+        // requestarray=seekSequence;
+        // direction=seekDirection;
         //console.log(direction);
         scan(requestarray, head, direction, disk_size)
     }
+    
   return (
     <div>
     <div className='flex flex-col justify-center items-center gap-5'>
@@ -171,6 +226,7 @@ const ScanDisk = () => {
         {seekCount!=-1 ? <Code color="primary" className='text-xl text-white font-semibold m-10'>Seek Count : {seekCount}</Code>:null}
         <div>
             <h1 className='text-white mt-5 text-xl font-semibold'>Chart</h1>
+            <Line data={data} options={options}/>
         </div>
     </div>
     
