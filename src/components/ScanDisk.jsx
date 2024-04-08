@@ -16,7 +16,7 @@ const ScanDisk = () => {
         const [graphSize , setGraphSize] = React.useState([]);
         
         const data = {
-            labels: [0,1,2,3,4,5,6,7,8,9],
+            labels: [0,1,2,3,4,5,6,7,8,9,10,11,12],
             datasets : [
                 {
                     label : "demo",
@@ -173,11 +173,11 @@ const ScanDisk = () => {
     let disk_size = 200;
 
     const handleGenerate = () => {
-        // disk_size=Number(diskSize);
-        // head=Number(headposition);
-        // requestarray=seekSequence;
-        // direction=seekDirection;
-        //console.log(direction);
+        disk_size=Number(diskSize);
+        head=Number(headposition);
+        requestarray=seekSequence;
+        direction=seekDirection;
+        console.log(direction);
         scan(requestarray, head, direction, disk_size)
     }
     
