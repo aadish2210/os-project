@@ -10,6 +10,8 @@ const Bankers = () => {
   const [maximum , setMaximum] = React.useState([]);
   const [max,setMax] = React.useState([]);
   const [alloc , setAlloc] = React.useState([]); 
+  const [safeSequence , setSafeSequence] = React.useState([]);
+  const [display , setDisplay] = React.useState(false);
   const handleSave = () => {
     let intAlloc = allocated.split(",").map(Number)
     alloc.push(intAlloc);
@@ -89,16 +91,19 @@ const Bankers = () => {
       }
     }
     
-    var sequence = "Following is the SAFE Sequence ";
+    //var sequence = "Following is the SAFE Sequence ";
     
     for(i=0;i<n;i++){
       console.log(ans[i])
     }
+    setSafeSequence(ans);
     }
     else{								//CS value 0 no safe sequence
       console.log("No safe Sequence");
     }
+    setDisplay(true);
   }
+  
   return (
     <div className='flex flex-col justify-center items-center'>
         <h1 className='text-4xl text-white font-semibold mt-3'>Banker's Algorithm</h1>
@@ -118,6 +123,15 @@ const Bankers = () => {
         <Button variant='ghost' color='primary' onClick={handleSave}>Save</Button></>}
         <Input label="Enter total resources array" className='font-semibold p-3 w-4/12 mt-4' onValueChange={setTotalResource}></Input>
         <Button variant='ghost' color='primary' className='mt-4' onClick={handleBankers}>Run Bankers</Button>
+        {display && safeSequence.length==0 && <Code className='mt-5' color='danger'>No Safe Sequence Found!</Code>}
+        {display && safeSequence.length!=0 && <h1 className='text-white mt-10 text- xl font-semibold'>Safe Sequence</h1>}
+        <div className='flex gap-5'>
+        {display && safeSequence.length!=0 && safeSequence.map((item,index) => 
+          <Code key={index} className='mt-3' color='success'>
+            {item}
+          </Code>
+        )}
+        </div>
     </div>
   )
 }
