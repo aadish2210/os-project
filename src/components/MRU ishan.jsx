@@ -1,29 +1,9 @@
-// import React from 'react'
-// import { Input, Button } from '@nextui-org/react';
-// const MRU = () => {
-//     const [frames,setFrames] = React.useState(0);
-//   return (
-//     <div>
-//         <h1 className='text-white text-3xl font-semibold'>MRU</h1>
-//         <h2 className='text-white text-xl'>(Most Recently Used Page Replacement)</h2>
-//         <div className='flex justify-center mt-10 items-center gap-5'>
-//             <Input label="Enter number of frames" className='w-4/12' />
-//             <Button variant='ghost' color='primary' label='Submit' onClicl/>
-//         </div>
-
-//     </div>
-//   )
-// }
-
-// export default MRU;
-
 import React, { useState } from 'react';
-import { Input, Button ,Code} from '@nextui-org/react';
-import MRUTable from './ishan table';
+import { Input, Button } from '@nextui-org/react';
+import BasicTable from './BasicTable';
 
 const MRU = () => {
     const [frames, setFrames] = useState('');
-    const [submit , setSubmit] = useState(false);
     const [series, setSeries] = useState('');
     const [result, setResult] = useState([]);
     const [totalHits, setTotalHits] = useState(0);
@@ -164,7 +144,7 @@ const MRU = () => {
                 result.push('Miss');
             }
         }
-        setSubmit(true);
+
     return { MRUResult: result, hits, misses, seqLen, frameLogs};
         
     };
@@ -181,21 +161,20 @@ const MRU = () => {
                 <Input label="Enter the series" className='w-4/12' value={series} onChange={handleSeriesChange} />
                 <Button variant='ghost' color='primary' onClick={handleSubmit}>Submit</Button>
             </div>
-            {submit &&<h2 className='mt-4 text-xl font-semibold'>Result</h2>}  
-            <div className="mt-5 flex gap-5 justify-center">
-                
-                {submit && result.map((item, index) => (
-                    <Code  color={item==="Hit" ? "success" : "danger"} key={index}>{item}</Code>
+            <div className="mt-5">
+                <h2>Result:</h2>
+                {result.map((item, index) => (
+                    <p key={index}>{item}</p>
                 ))}
             </div>
-            {submit && <div className="mt-5">
-                <h2 className='text-xl font-semibold'>Total Hits: {totalHits}</h2>
-                <h2 className='text-xl font-semibold'>Total Misses: {totalMisses}</h2>
-            </div>}
+            <div className="mt-5">
+                <h2>Total Hits: {totalHits}</h2>
+                <h2>Total Misses: {totalMisses}</h2>
+            </div>
            
         </div>
         <div className="mt-5"></div>
-        <MRUTable frames={frames} seqLen={seqLen} frameLogs={frameLogs} series={series}/>
+        <BasicTable frames={frames} seqLen={seqLen} frameLogs={frameLogs} series={series}/>
         </>
     );
 };
