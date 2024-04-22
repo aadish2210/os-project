@@ -1,6 +1,7 @@
 import React from 'react'
 import {Slider,Input,Button} from "@nextui-org/react";
 import BasicTable from './BasicTable';
+import GanttChart from './GanttChart';
 const RoundRobin = () => {
   let completionTime = [];
   let turnaroundTime = [];
@@ -23,10 +24,11 @@ const RoundRobin = () => {
   const [passTAT , setPassTAT] = React.useState([]);
   const [passBT , setPassBT] = React.useState([]);
   const [passAT , setPassAT] = React.useState([]);
+  const [executingProcesses, setExecutingProcesses] = React.useState([]);
 
   const handleClick = () => {
     setProcesses([...processes, { id , arrivalTime : aT, burstTime:bT }]);
-    console.log("Added Process");
+    //console.log("Added Process");
   };
 
   
@@ -77,7 +79,7 @@ const RoundRobin = () => {
     queue.sort((a, b) => a.arrivalTime - b.arrivalTime);
 
     let elapsedTime = Number(queue[0].arrivalTime);
-    console.log(elapsedTime);
+    //console.log(elapsedTime);
     // have to do something when there are no processes but still there in queue
   
     while (readyQueue.length > 0 || queue.length > 0) {
@@ -93,13 +95,18 @@ const RoundRobin = () => {
 
         const currentProcess = readyQueue.shift();
         
-        console.log(`Process ${currentProcess.id} is running`);
+        //console.log(`Process ${currentProcess.id} is running`);
         setExecuting(currentProcess.id);
         // Update burst time
         const remainingBurstTime = Math.max(0, currentProcess.burstTime - timeQuantum);
         elapsedTime += Math.min(timeQuantum, currentProcess.burstTime);
         console.log("yoyoy string : " + elapsedTime);
         currentProcess.burstTime = remainingBurstTime;
+
+        setExecutingProcesses((prevProcesses) => [
+          ...prevProcesses,
+          currentProcess.id, // Store only the process ID
+        ]);
 
         if (currentProcess.burstTime > 0) {
             while (queue.length > 0 && queue[0].arrivalTime <= elapsedTime) {
@@ -115,7 +122,7 @@ const RoundRobin = () => {
             turnaroundTime.push({ id: currentProcess.id, time: elapsedTime - currentProcess.arrivalTime });
             waitingTime.push({ id: currentProcess.id, time: elapsedTime - currentProcess.arrivalTime - burstTime.find(entry => entry.id === currentProcess.id).time});
         }
-
+        // executingProcesses.push(currentProcess.id);
         await new Promise(resolve => setTimeout(resolve, 1000));
     } 
 
@@ -127,6 +134,7 @@ const RoundRobin = () => {
     setPassBT(btToPass);
     setPassTAT(turnaroundTime);
     setPassWT(waitingTime);
+    console.log(executingProcesses);
     console.log("Process Execution Completed");
     for (let i = 0; i < completionTime.length; i++) {
       console.log(processname[i]);
@@ -193,6 +201,7 @@ const RoundRobin = () => {
           ))}
       </div>
       {completed && <BasicTable name={pName} completionTime={passCT} waitingTime={passWT} turnaroundTime={passTAT} arrivalTime={passAT} burstTime={passBT}/>}
+      {completed && <GanttChart executingProcesses={executingProcesses} />}
     </div> 
 )
 }

@@ -19,7 +19,7 @@
 
 import React, { useState } from 'react';
 import { Input, Button ,Code} from '@nextui-org/react';
-import MRUTable from './ishan table';
+import MRUTable from './MRUTable';
 
 const MRU = () => {
     const [frames, setFrames] = useState('');
@@ -188,9 +188,9 @@ const MRU = () => {
                     <Code  color={item==="Hit" ? "success" : "danger"} key={index}>{item}</Code>
                 ))}
             </div>
-            {submit && <div className="mt-5">
-                <h2 className='text-xl font-semibold'>Total Hits: {totalHits}</h2>
-                <h2 className='text-xl font-semibold'>Total Misses: {totalMisses}</h2>
+            {submit && <div className="mt-10">
+                <h2 className='text-lg font-semibold'>Total Hits: {totalHits}</h2>
+                <h2 className='text-lg font-semibold'>Total Misses: {totalMisses}</h2>
             </div>}
            
         </div>
